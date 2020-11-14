@@ -35,7 +35,8 @@ class BitVector extends PrioSet {
 
     while (h < arr.size) {
       val byte = arr(h)
-      while (l < 8) {
+      // `byte != 0` is an optimization.
+      while (byte != 0 && l < 8) {
         if (getBit(byte, l))
           return Some(index(h, l))
         l += 1
