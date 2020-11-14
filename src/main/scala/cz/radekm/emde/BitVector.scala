@@ -1,11 +1,11 @@
 package cz.radekm.emde
 
 object BitVector {
-  def apply() = new BitVector()
+  def apply(universeSize: Int = UniverseSize) = new BitVector(universeSize)
 }
 
-class BitVector extends PrioSet {
-  private[this] val arr = new Array[Byte](high(UniverseSize))
+class BitVector(val universeSize: Int) extends PrioSet {
+  private[this] val arr = new Array[Byte](high(universeSize))
 
   private def high(x: Int) = x >> 3
   private def low(x: Int) = x & 0x07
