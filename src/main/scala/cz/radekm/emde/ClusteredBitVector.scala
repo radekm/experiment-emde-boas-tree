@@ -1,25 +1,23 @@
 package cz.radekm.emde
 
 object ClusteredBitVector {
-  def apply(universeSize: Int = UniverseSize) = new ClusteredBitVector(universeSize)
+  def apply(universeSizeLog: Int,  clusterSizeLog: Int) = new ClusteredBitVector(universeSizeLog, clusterSizeLog)
 }
 
-class ClusteredBitVector(val universeSize: Int) extends PrioSet {
-  val clusterSize = 1 << (Math.log(universeSize) / Math.log(2) / 2).toInt
-  val numClusters = universeSize / clusterSize
+class ClusteredBitVector(
+  override final val universeSizeLog: Int,
+  override final val clusterSizeLog: Int,
+  private val createPrioSet: Int => PrioSet = universeSizeLog => BitVector(universeSizeLog),
+) extends PrioSet {
 
-  require(clusterSize * numClusters == universeSize,
-    s"Invalid clusterSize $clusterSize time numClusters $numClusters is not universeSize $universeSize")
+  override final def numClustersLog: Int = universeSizeLog - clusterSizeLog
 
-  // If something is in the cluster.
-  private val summary = BitVector(numClusters)
-  private val clusters = Array.fill(numClusters) { BitVector(clusterSize) }
+  // Contains 1 if something is in the cluster.
+  private val summary = createPrioSet(numClustersLog)
+  // Contents of the cluster.
+  private val clusters = Array.fill(numClusters) { createPrioSet(clusterSizeLog) }
   private val numItemsInCluster = Array.fill(numClusters) { 0 }
 
-  private def high(x: Int) = x / clusterSize
-  private def low(x: Int) = x % clusterSize
-  private def index(h: Int, l: Int) = h * clusterSize + l
-  
   override def member(x: Int): Boolean =
     if (x < 0) false
     else {

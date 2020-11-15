@@ -1,15 +1,14 @@
 package cz.radekm.emde
 
 object BitVector {
-  def apply(universeSize: Int = UniverseSize) = new BitVector(universeSize)
+  def apply(universeSizeLog: Int) = new BitVector(universeSizeLog)
 }
 
-class BitVector(val universeSize: Int) extends PrioSet {
-  private[this] val arr = new Array[Byte](high(universeSize))
+class BitVector(override final val universeSizeLog: Int) extends PrioSet {
+  override final def clusterSizeLog = 3
+  override final def numClustersLog = universeSizeLog - clusterSizeLog
 
-  private def high(x: Int) = x >> 3
-  private def low(x: Int) = x & 0x07
-  private def index(h: Int, l: Int) = (h << 3) | l
+  private val arr = new Array[Byte](numClusters)
 
   private def getBit(byte: Byte, i: Int): Boolean = ((byte >> i) & 1) == 1
   private def setBit(byte: Byte, i: Int, bit: Boolean): Byte = {
@@ -17,7 +16,7 @@ class BitVector(val universeSize: Int) extends PrioSet {
     else byte & ~(1 << i)
   }.toByte
 
-  def member(x: Int): Boolean =
+  override def member(x: Int): Boolean =
     if (x < 0) false
     else {
       val h = high(x)
@@ -33,7 +32,7 @@ class BitVector(val universeSize: Int) extends PrioSet {
       l = low(x) + 1
     }
 
-    while (h < arr.size) {
+    while (h < arr.length) {
       val byte = arr(h)
       // `byte != 0` is an optimization.
       while (byte != 0 && l < 8) {

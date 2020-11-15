@@ -4,7 +4,23 @@ package cz.radekm.emde
  * Represents subset of `0 until universeSize`.
  */
 abstract class PrioSet {
-  def universeSize: Int
+  def universeSizeLog: Int
+  def numClustersLog: Int
+  def clusterSizeLog: Int
+
+  require(0 <= universeSizeLog && universeSizeLog <= 32)
+  require(0 <= numClustersLog)
+  require(0 <= clusterSizeLog)
+  require(numClustersLog + clusterSizeLog == universeSizeLog)
+
+  final val universeSize: Int = 1 << universeSizeLog
+  final val numClusters: Int = 1 << numClustersLog
+  final val clusterSize: Int = 1 << clusterSizeLog
+
+  protected final def high(x: Int) = x >> clusterSizeLog
+  protected final def low(x: Int) = x & (clusterSize - 1)
+  protected final def index(h: Int, l: Int) = (h << clusterSizeLog) | l
+
   /**
    * Returns whether `i` is in the set.
    */

@@ -49,7 +49,7 @@ trait PrioSetSuiteBase extends SimpleTestSuite {
   }
 
   test("value is not member after delete") {
-    val v = BitVector()
+    val v = create()
     val xs = insideUniverse.distinct
     xs.foreach { x => v.insert(x) }
     xs.indices.foreach { i =>
