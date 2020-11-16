@@ -50,3 +50,7 @@ class ClusteredBitVectorSuccessorBenchmark extends AbstractSuccessorBenchmark {
 class RecursiveClusteredBitVectorSuccessorBenchmark extends AbstractSuccessorBenchmark {
   override protected def create(): PrioSet = RecursiveClusteredBitVector(UniverseSizeLog, UniverseSizeLog / 2)
 }
+
+class BitVectorViaBitSetSuccessorBenchmark extends AbstractSuccessorBenchmark {
+  override protected def create(): PrioSet = BitVectorViaBitSet(UniverseSizeLog)
+}
