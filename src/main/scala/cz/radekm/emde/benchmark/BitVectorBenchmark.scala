@@ -19,16 +19,28 @@ abstract class AbstractSuccessorBenchmark {
   }
 
   @Benchmark
-  def successorClose(): Option[Int] = {
+  def successorMedium(): Option[Int] = {
     val prioSet = create()
     prioSet.insert(1)
     prioSet.insert(2_000)
+    prioSet.successor(1)
+  }
+
+  @Benchmark
+  def successorClose(): Option[Int] = {
+    val prioSet = create()
+    prioSet.insert(1)
+    prioSet.insert(3)
     prioSet.successor(1)
   }
 }
 
 class BitVectorSuccessorBenchmark extends AbstractSuccessorBenchmark {
   override protected def create(): PrioSet = BitVector(UniverseSizeLog)
+}
+
+class BitVectorLongSuccessorBenchmark extends AbstractSuccessorBenchmark {
+  override protected def create(): PrioSet = BitVectorLong(UniverseSizeLog)
 }
 
 class ClusteredBitVectorSuccessorBenchmark extends AbstractSuccessorBenchmark {
