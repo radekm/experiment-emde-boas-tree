@@ -25,25 +25,28 @@ class BitVectorLong(override final val universeSizeLog: Int) extends PrioSet {
 
   override def successor(x: Int): Option[Int] = {
     var h = 0
-    var l = 0
+    var cluster: Long = 0
 
     if (x >= 0) {
       h = high(x)
-      l = low(x) + 1
+      val l = low(x) + 1
+
+      if (h < arr.length && l < clusterSize) {
+        cluster = (arr(h) >> l) << l
+      }
     }
 
-    while (h < arr.length) {
-      val cluster = arr(h)
-      // `cluster != 0` is an optimization.
-      while (cluster != 0 && l < 64) {
-        if (getBit(cluster, l))
-          return Some(index(h, l))
-        l += 1
-      }
-      l = 0
+    while (true) {
+      if (cluster != 0)
+        return Some(index(h, java.lang.Long.numberOfTrailingZeros(cluster)))
       h += 1
+      if (h < arr.length) {
+        cluster = arr(h)
+      } else {
+        return None
+      }
     }
-    None
+    sys.error("Absurd")
   }
 
   override def insert(x: Int): Unit =
