@@ -18,6 +18,7 @@ object SuccessorBenchmark {
     "RecursiveClusteredBitVector" -> (() => RecursiveClusteredBitVector(UniverseSizeLog, UniverseSizeLog / 2)),
     "ScalaTreeSet" -> (() => ScalaTreeSet(UniverseSizeLog)),
     "TreeSet" -> (() => TreeSet(UniverseSizeLog)),
+    "EmdeSet" -> (() => EmdeSet(UniverseSizeLog, UniverseSizeLog / 2, 6)),
   )
 
   val distances = Map[String, Int](
@@ -38,7 +39,7 @@ class SuccessorBenchmarkState {
   @Param(Array(
     "BitVector", "BitVectorLong", "BitVectorViaBitSet",
     "ClusteredBitVector", "RecursiveClusteredBitVector",
-    "ScalaTreeSet", "TreeSet"
+    "ScalaTreeSet", "TreeSet", "EmdeSet"
   ))
   var implementation: String = ""
 
