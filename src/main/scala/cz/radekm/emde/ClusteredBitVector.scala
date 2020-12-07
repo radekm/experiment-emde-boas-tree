@@ -22,7 +22,7 @@ class ClusteredBitVector(
     if (x < 0) false
     else {
       val h = high(x)
-      h < numClusters && summary.member(h) && clusters(h).member(low(x))
+      h < numClusters && clusters(h).member(low(x))
     }
 
   // This is same as `BitVector` but instead of bytes we have clusters.
