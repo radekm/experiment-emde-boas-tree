@@ -165,10 +165,11 @@ private class EmdeSetRec(
         val h = summary.min
         val cl = clusters(h)
         val l = cl.min
-        // New `min` is the second  smallest element.
+        // New `min` is the second smallest element.
         min = index(h, l)
 
-        // Since `min` is not in `summary` nor in `clusters` we have to remove it.
+        // Since `min` should not be in `summary` nor in `clusters` we have to remove it
+        // (it is there because it was the second smallest element).
         cl.delete(l)
         if (cl.isEmpty) {
           summary.delete(h)
